@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from PageObjects.base_page import BasePage
@@ -20,58 +21,62 @@ class OrderScooterFormLocators:
 
 
 class OrderScooter(BasePage):
+    @allure.step(title='заполнение поля \'Имя\'')
     def fill_name_field(self, name):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_NAME, name)
 
+    @allure.step(title='заполнение поля \'Фамилия\'')
     def fill_surname_field(self, surname):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_SURNAME, surname)
 
+    @allure.step(title='заполнение поля \'Адрес\'')
     def fill_address_field(self, address):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_ADDRESS, address)
 
+    @allure.step(title='заполнение поля \'Станция метро\'')
     def fill_metro_field(self, metro):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_METRO, metro)
         self.find_element((By.XPATH, f"//div[text()='{metro}']")).click()
 
+    @allure.step(title='заполнение поля \'Телефон\'')
     def fill_phone_field(self, phone):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_PHONE, phone)
 
+    @allure.step(title='заполнение поля \'Когда привезти самокат\'')
     def fill_date_field(self, date):
         self.fill_input(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_INPUT_DATE, date)
 
+    @allure.step(title='заполнение поля \'Срок аренды\'')
     def fill_term_field(self, term):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_ARROW).click()
         self.find_element((By.XPATH, f"//div[text()='{term}']")).click()
 
+    @allure.step(title='нажатие на кнопку \'Далее\'')
     def click_next_button(self):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_NEXT_BUTTON).click()
 
+    @allure.step(title='нажатие на кнопку \'Заказать\'')
     def click_order_button(self):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_BUTTON_ORDER).click()
 
+    @allure.step(title='нажатие на кнопку подтверждения')
     def click_confirm_button(self):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_BUTTON_CONFIRM).click()
 
+    @allure.step(title='проверка появления уведомления об успешном создании заказа')
     def check_placed_order(self):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_PLACED_ORDER)
 
+    @allure.step(title='открытие страницы оформления заказа')
     def open_page(self):
-        self.driver.get(Config.ORDER_URL)
+        self.go_to_page(Config.ORDER_URL)
 
+    @allure.step(title='проверка перемещения на страницу Яндекс Дзен')
     def check_reallocation_yandex(self):
-        original_window = self.driver.current_window_handle
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_YANDEX_IMG).click()
-        WebDriverWait(self.driver, 10).until(
-            lambda d: len(d.window_handles) > 1
-        )
-        new_window = [window for window in self.driver.window_handles if window != original_window][0]
-        self.driver.switch_to.window(new_window)
-        WebDriverWait(self.driver, 10).until(
-            lambda d: Config.YANDEX_URL == d.current_url
-        )
+        self.switch_to_new_window()
 
+    @allure.step(title='проверка перемещения на главную страницу')
     def check_reallocation_main_page(self):
         self.find_element(OrderScooterFormLocators.LOCATOR_ORDER_SCOOTER_SCOOTER_IMG).click()
-        WebDriverWait(self.driver, 10).until(
-            lambda d: Config.BASE_URL == d.current_url
-        )
+        self.wait(lambda d: Config.BASE_URL == d.current_url)
