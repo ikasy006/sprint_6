@@ -1,13 +1,6 @@
 import pytest
 
-from PageObjects.pages.main_page import MainPage
 from PageObjects.pages.order_scooter import OrderScooter
-
-
-test_data = [
-    ['Рина', 'Кесс', 'москва', 'Черкизовская', '+79002223311', '23.05.2025', 'сутки', 'чёрный жемчуг'],
-    ['Алия', 'Джесс', 'Москва, Варшавское шоссе', 'Севастопольская', '89997776644', '30.05.2025', 'двое суток', 'серая безысходность']
-]
 
 def test_order_scooter_for_header_button(main_page):
     main_page.go_to_site()
